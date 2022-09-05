@@ -21,7 +21,7 @@ _global_script_class_icons={
 [application]
 
 config/name="JamToolkit"
-run/main_scene="res://GameTypes/Platformer/PlatformerScene.tscn"
+run/main_scene="res://GameTypes/TopDown/top_down_scene.tscn"
 config/icon="res://icon.png"
 
 [autoload]
