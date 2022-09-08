@@ -1,12 +1,22 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Assets/simple_tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://GameTypes/TopDown/4Axis/4_axis_player_controller.tscn" type="PackedScene" id=2]
+[ext_resource path="res://GameTypes/TopDown/8Axis/8_axis_player_controller.tscn" type="PackedScene" id=3]
+[ext_resource path="res://GameTypes/TopDown/Omni/omni_axis_player_controller.tscn" type="PackedScene" id=4]
 
 [node name="TopDownScene" type="Node2D"]
 
 [node name="4AxisPlayerController" parent="." instance=ExtResource( 2 )]
+visible = false
 position = Vector2( 220, 139 )
+
+[node name="8AxisPlayerController" parent="." instance=ExtResource( 3 )]
+visible = false
+position = Vector2( 476, 309 )
+
+[node name="OmniAxisPlayerController" parent="." instance=ExtResource( 4 )]
+position = Vector2( 247, 173 )
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )

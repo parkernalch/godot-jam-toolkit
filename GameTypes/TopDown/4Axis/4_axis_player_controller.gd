@@ -1,10 +1,16 @@
 extends Area2D
 
-export var move_time = 0.125
+export var move_time = 0.3
 export var tile_size = 16
 
 onready var tween = $Tween
-onready var cast = $RayCast2D
+onready var right_cast = $RightCast
+onready var up_cast = $UpCast
+onready var left_cast = $LeftCast
+onready var down_cast = $DownCast
+
+var input_released = false
+var is_running = false
 
 func _ready():
 	position = position.snapped(Vector2.ONE * tile_size)
@@ -12,6 +18,7 @@ func _ready():
 	pass
 	
 func _process(delta):
+	is_running = Input.is_action_pressed("run")
 	if tween.is_active():
 		return
 	if Input.is_action_pressed("move_left"):
@@ -28,9 +35,17 @@ func _physics_process(delta):
 	pass
 
 func move(direction, duration):
-	cast.cast_to = direction * tile_size
-	cast.force_raycast_update()
-	if cast.is_colliding():
+	var will_bump = false
+	match direction:
+		Vector2.RIGHT:
+			will_bump = right_cast.is_colliding()
+		Vector2.UP:
+			will_bump = up_cast.is_colliding()
+		Vector2.LEFT:
+			will_bump = left_cast.is_colliding()
+		Vector2.DOWN:
+			will_bump = down_cast.is_colliding()
+	if will_bump:
 		tween_bump(direction, duration)
 	else:
 		tween_to(direction, duration)
@@ -41,9 +56,9 @@ func tween_to(direction, duration):
 		"position",
 		position,
 		position + direction * tile_size,
-		duration,
-		Tween.TRANS_SINE,
-		Tween.EASE_IN_OUT
+		duration if not is_running else duration * 0.5,
+		Tween.TRANS_LINEAR
+#		Tween.EASE_IN_OUT
 	)
 	tween.start()
 	
