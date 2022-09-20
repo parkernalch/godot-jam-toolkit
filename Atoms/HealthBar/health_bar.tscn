@@ -1,0 +1,60 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Atoms/HealthBar/health_bar.gd" type="Script" id=1]
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+uniform bool is_horizontal = true;
+uniform float bar_fill : hint_range(0.0, 1.0) = 1.0;
+uniform float buffer_fill : hint_range(0.0, 1.0) = 1.0;
+uniform vec4 buffer_color : hint_color;
+uniform vec4 unfilled_color : hint_color;
+uniform sampler2D color_gradient;
+
+void fragment() {
+	vec4 bar_color = texture(color_gradient, vec2(bar_fill, bar_fill));
+	
+	// Set Bar Color and fill
+	COLOR = bar_color;
+	if (is_horizontal && UV.x > bar_fill) {
+		COLOR = unfilled_color;
+	}
+	if (!is_horizontal && UV.y > bar_fill) {
+		COLOR = unfilled_color;
+	}
+	
+	if (is_horizontal && UV.x < bar_fill && UV.x > buffer_fill) {
+		COLOR = buffer_color;
+	}
+	if (!is_horizontal && UV.y < bar_fill && UV.y > buffer_fill) {
+		COLOR = buffer_color;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/is_horizontal = false
+shader_param/bar_fill = 1.0
+shader_param/buffer_fill = 1.0
+shader_param/buffer_color = null
+shader_param/unfilled_color = Color( 0.501961, 0.501961, 0.501961, 1 )
+
+[sub_resource type="Gradient" id=5]
+offsets = PoolRealArray( 0, 0.698324, 1 )
+colors = PoolColorArray( 1, 0, 0, 1, 0.945312, 1, 0, 1, 0.21875, 1, 0, 1 )
+
+[sub_resource type="GradientTexture" id=6]
+gradient = SubResource( 5 )
+
+[node name="health_bar" type="ColorRect"]
+material = SubResource( 4 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+bar_color = Color( 0.321569, 0.321569, 0.321569, 1 )
+bar_gradient = SubResource( 6 )
+buffer_lag_time = 0.5
+
+[node name="Tween" type="Tween" parent="."]
