@@ -9,25 +9,19 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "ColorRect",
-"class": "HealthBar",
-"language": "GDScript",
-"path": "res://Atoms/HealthBar/health_bar.gd"
-}, {
 "base": "Resource",
 "class": "PlatformerData",
 "language": "GDScript",
 "path": "res://Resources/platformer_data.gd"
 } ]
 _global_script_class_icons={
-"HealthBar": "",
 "PlatformerData": ""
 }
 
 [application]
 
 config/name="JamToolkit"
-run/main_scene="res://GameTypes/Isometric/IsometricScene.tscn"
+run/main_scene="res://Test/TestHealthBar/TestHealthBar.tscn"
 config/icon="res://icon.png"
 
 [autoload]

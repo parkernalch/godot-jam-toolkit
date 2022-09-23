@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Atoms/HealthBar/health_bar.gd" type="Script" id=1]
+[ext_resource path="res://Atoms/HealthBar/HealthBar.cs" type="Script" id=1]
 
 [sub_resource type="Shader" id=3]
 code = "shader_type canvas_item;
@@ -53,8 +53,8 @@ material = SubResource( 4 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
-bar_color = Color( 0.321569, 0.321569, 0.321569, 1 )
-bar_gradient = SubResource( 6 )
-buffer_lag_time = 0.5
+BarColor = Color( 0.321569, 0.321569, 0.321569, 1 )
+BarGradient = SubResource( 6 )
+BufferLagTime = 0.5
 
 [node name="Tween" type="Tween" parent="."]

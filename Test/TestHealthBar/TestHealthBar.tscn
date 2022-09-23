@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Atoms/HealthBar/health_bar.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Test/TestHealthBar/TestHealthBar.cs" type="Script" id=2]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="health_bar" parent="." instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 49.0
+margin_top = 22.0
+margin_right = 222.0
+margin_bottom = 61.0
+color = Color( 0.431373, 0.188235, 0.188235, 1 )
+BarColor = Color( 0.658824, 0.658824, 0.658824, 1 )
+BufferColor = Color( 0.72549, 0.211765, 0.211765, 1 )
