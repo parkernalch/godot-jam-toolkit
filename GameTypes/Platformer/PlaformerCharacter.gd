@@ -6,6 +6,9 @@ signal jumped(is_grounded)
 signal landed(impact_velocity)
 
 onready var cast: RayCast2D = $DownCast
+onready var cast2: RayCast2D = $DownCast2
+onready var left_cast: RayCast2D = $LeftCast
+onready var right_cast: RayCast2D = $RightCast
 onready var coyote_timer: Timer = $CoyoteTimer
 onready var jump_buffer_timer: Timer = $JumpBufferTimer
 
@@ -32,6 +35,10 @@ var jump_force = 0
 var jump_pressed = false
 var jump_released = false
 
+# wall
+var on_wall = null # "left" or "right"
+var wall_drag_strength = 0
+
 class Accel:
 	var acceleration: float
 	var deceleration: float
@@ -44,6 +51,17 @@ func _ready():
 	data = platformer_data
 	EventBus.connect("platformer_resource_updated", self, "_on_resource_updated")
 	coyote_timer.connect("timeout", self, "_on_coyote_time_expired")
+#var wall_drag = 1.0
+#var wall_drag_decay_time = 1.0
+#var can_wall_jump = true
+#var wall_jump_force = 10.0
+#var wall_jump_angle = 45.0
+#var wall_jump_control_timeout = 0.5
+	if data.wall_drag_decay_time > 0:
+		$WallDragDecayTimer.wait_time = data.wall_drag_decay_time
+		$WallDragDecayTimer.one_shot = true
+	$WallJumpControlTimer.wait_time = data.wall_jump_control_timeout
+	$WallJumpControlTimer.one_shot = true
 	set_resource_derived_properties()
 
 func _on_coyote_time_expired():
@@ -99,51 +117,96 @@ func apply_horizontal_forces(delta, forces):
 		# apply deceleration
 		return velocity.x + sign(velocity.x) * -1 * forces.deceleration * delta
 	else:
-		var v = velocity.x + forces.acceleration * delta * horizontal_input
+		var v = velocity.x
+		var has_wall_jumped = $WallJumpControlTimer.time_left > 0
+		if has_wall_jumped:
+			var wall_jump_control_factor = 1 if not has_wall_jumped else 1 - $WallJumpControlTimer.time_left / $WallJumpControlTimer.wait_time
+			v += forces.acceleration * delta * horizontal_input * wall_jump_control_factor
+			return v
+		v += forces.acceleration * delta * horizontal_input
 		if isNearTopSpeed:
 			# allows for quick turnraound at top speeds
 			return top_speed * sign(horizontal_input)
 		# apply acceleration
 		return v
 	return velocity.x
+
+func apply_vertical_forces(delta):
+	var v = velocity.y
+	# handle jumps
+
+	# handle variable gravity
+	if velocity.y > 0:
+		v += base_gravity * data.gravity_down_modifier * delta * size_per_unit
+	else:
+		v += base_gravity * data.gravity_up_modifier * delta * size_per_unit
+	
+	# handle wall drag
+	if on_wall != null and velocity.y > 0:
+		var wall_drag = v * (wall_drag_strength) * sign(v) * -1
+		v += wall_drag
+	return v
 	
 func _physics_process(delta):
 	var was_airborne = not is_grounded
 	var was_stationary = time_since_last_move > 0.5 and is_grounded
-	is_grounded = cast.is_colliding()
+	is_grounded = cast.is_colliding() or cast2.is_colliding()
+	
+	var is_on_left_wall = left_cast.is_colliding() and horizontal_input < 0
+	var is_on_right_wall = right_cast.is_colliding() and horizontal_input > 0
+	
+	if is_on_left_wall:
+		on_wall = "left"
+	elif is_on_right_wall:
+		on_wall = "right"
+	else:
+		on_wall = null
+	 
+	if on_wall != null:
+		wall_drag_strength = max(wall_drag_strength - delta / data.wall_drag_decay_time, 0)
 	
 	if was_airborne and is_grounded:
+		$AnimatedSprite.squash_and_stretch(0.25, 0.25)
+		$WallJumpControlTimer.stop()
 		emit_signal("landed", cached_velocity)
 	if not was_airborne and not is_grounded:
 		coyote_timer.start(data.jump_coyote_timeout)
 
-	if is_grounded:
-		jumps_remaining = 1 + data.jump_midair_count	
-		velocity.x = apply_horizontal_forces(delta, grounded_forces)
-	else:
-		velocity.x = apply_horizontal_forces(delta, airborne_forces)
-	
-	if (jump_pressed or jump_buffer_timer.time_left > 0) and jumps_remaining > 0:
-		velocity.y = - jump_force
+	if (jump_pressed or jump_buffer_timer.time_left > 0):
+		if on_wall != null and not is_grounded:
+			velocity.y = - data.wall_jump_force * sin(data.wall_jump_angle)
+			velocity.x = - data.wall_jump_force * cos(data.wall_jump_angle)
+			if on_wall == "left":
+				velocity.x *= -1
+			$WallJumpControlTimer.start()
+		elif jumps_remaining > 0:
+			velocity.y = - jump_force
 		emit_signal("jumped", is_grounded)
 		jump_pressed = false
 		jumps_remaining -= 1
 		jump_buffer_timer.stop()
 	if data.jump_is_variable && jump_released && velocity.y < 0:
 		velocity.y *= 0.2
-		jump_released = false	
+		jump_released = false
 	
-	if velocity.y > 0:
-		velocity.y += base_gravity * data.gravity_down_modifier * delta * size_per_unit
+	if is_grounded:
+		jumps_remaining = 1 + data.jump_midair_count
+		wall_drag_strength = data.wall_drag
+		velocity.x = apply_horizontal_forces(delta, grounded_forces)
 	else:
-		velocity.y += base_gravity * data.gravity_up_modifier * delta * size_per_unit
-		
+		velocity.x = apply_horizontal_forces(delta, airborne_forces)
+		pass
+	
+	velocity.y = apply_vertical_forces(delta)
+
 	velocity = move_and_slide_with_snap(
 		velocity, 
 		Vector2.UP, 
 		Vector2.UP, 
 		true
 	)
+	if cached_velocity.x != 0 and velocity.x == 0 and (left_cast.is_colliding() or right_cast.is_colliding()):
+		$AnimatedSprite.stretch(0.25, 0.2)
 	cached_velocity = velocity
 	
 	if was_stationary and velocity.x != 0:

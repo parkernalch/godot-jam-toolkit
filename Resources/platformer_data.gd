@@ -2,7 +2,7 @@ tool
 extends Resource
 class_name PlatformerData
 
-# HMovement\
+# HMovement
 var move_acceleration_time: float = 1.0
 var move_deceleration_time: float = 1.0
 var move_top_speed: float = 10.0
@@ -15,6 +15,14 @@ var jump_midair_count: int = 1
 var jump_has_air_control: bool = true
 var jump_buffer_timeout: float = 0.0
 var jump_coyote_timeout: float = 0.0
+
+# Wall Jumping
+var wall_drag = 0.5
+var wall_drag_decay_time = 5.0
+var wall_jump_enabled = true
+var wall_jump_force = 10.0
+var wall_jump_angle = 45.0
+var wall_jump_control_timeout = 0.3
 
 # Gravity
 var gravity_up_modifier: float = 5
@@ -74,6 +82,37 @@ func _get_property_list():
 	})
 	properties.append({
 		name = "jump_coyote_timeout",
+		type = TYPE_REAL
+	})
+	
+	properties.append({
+		name = "Wall Jump",
+		type = TYPE_NIL,
+		hint_string = "wall_",
+		usage = PROPERTY_USAGE_GROUP | PROPERTY_USAGE_SCRIPT_VARIABLE
+	})
+	properties.append({
+		name = "wall_drag",
+		type = TYPE_REAL
+	})
+	properties.append({
+		name = "wall_drag_decay_time",
+		type = TYPE_REAL
+	})
+	properties.append({
+		name = "wall_jump_enabled",
+		type = TYPE_BOOL
+	})
+	properties.append({
+		name = "wall_jump_force",
+		type = TYPE_REAL
+	})
+	properties.append({
+		name = "wall_jump_angle",
+		type = TYPE_REAL
+	})
+	properties.append({
+		name = "wall_jump_control_timeout",
 		type = TYPE_REAL
 	})
 	

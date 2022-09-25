@@ -9,19 +9,37 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Area2D",
+"class": "HitBox",
+"language": "GDScript",
+"path": "res://Atoms/HitDetection/hit_box.gd"
+}, {
+"base": "Area2D",
+"class": "HurtBox",
+"language": "GDScript",
+"path": "res://Atoms/HitDetection/hurt_box.gd"
+}, {
 "base": "Resource",
 "class": "PlatformerData",
 "language": "GDScript",
 "path": "res://Resources/platformer_data.gd"
+}, {
+"base": "Node2D",
+"class": "SquashStretch",
+"language": "GDScript",
+"path": "res://Scripts/squash_stretch.gd"
 } ]
 _global_script_class_icons={
-"PlatformerData": ""
+"HitBox": "",
+"HurtBox": "",
+"PlatformerData": "",
+"SquashStretch": ""
 }
 
 [application]
 
 config/name="JamToolkit"
-run/main_scene="res://Test/TestHealthBar/TestHealthBar.tscn"
+run/main_scene="res://MainMenu.tscn"
 config/icon="res://icon.png"
 
 [autoload]

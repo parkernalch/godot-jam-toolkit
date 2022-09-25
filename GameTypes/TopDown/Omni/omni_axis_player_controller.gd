@@ -19,5 +19,5 @@ func _process(_delta):
 	
 func _physics_process(delta):
 	var run_mod = 1 if not is_running else 2
-	move_and_slide(input_direction * tile_size * tiles_per_second * run_mod)
+	move_and_slide(input_direction.normalized() * tile_size * tiles_per_second * run_mod)
 	pass

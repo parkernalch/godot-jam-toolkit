@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Assets/16xSquare.png" type="Texture" id=1]
 [ext_resource path="res://GameTypes/Platformer/PlaformerCharacter.gd" type="Script" id=2]
 [ext_resource path="res://Resources/platformer_data.tres" type="Resource" id=3]
+[ext_resource path="res://Scripts/squash_stretch.gd" type="Script" id=4]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -22,14 +23,33 @@ platformer_data = ExtResource( 3 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 self_modulate = Color( 0, 0.92549, 0.188235, 1 )
 frames = SubResource( 1 )
+script = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
 
 [node name="DownCast" type="RayCast2D" parent="."]
+position = Vector2( 6, 0 )
 enabled = true
 cast_to = Vector2( 0, 10 )
+
+[node name="DownCast2" type="RayCast2D" parent="."]
+position = Vector2( -6, 0 )
+enabled = true
+cast_to = Vector2( 0, 10 )
+
+[node name="LeftCast" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( -10, 0 )
+
+[node name="RightCast" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 10, 0 )
 
 [node name="CoyoteTimer" type="Timer" parent="."]
 
 [node name="JumpBufferTimer" type="Timer" parent="."]
+
+[node name="WallDragDecayTimer" type="Timer" parent="."]
+
+[node name="WallJumpControlTimer" type="Timer" parent="."]
