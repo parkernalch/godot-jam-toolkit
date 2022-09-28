@@ -9,16 +9,6 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Area2D",
-"class": "HitBox",
-"language": "GDScript",
-"path": "res://Atoms/HitDetection/hit_box.gd"
-}, {
-"base": "Area2D",
-"class": "HurtBox",
-"language": "GDScript",
-"path": "res://Atoms/HitDetection/hurt_box.gd"
-}, {
 "base": "Node2D",
 "class": "PickableMapObject",
 "language": "GDScript",
@@ -35,8 +25,6 @@ _global_script_classes=[ {
 "path": "res://Scripts/squash_stretch.gd"
 } ]
 _global_script_class_icons={
-"HitBox": "",
-"HurtBox": "",
 "PickableMapObject": "",
 "PlatformerData": "",
 "SquashStretch": ""
