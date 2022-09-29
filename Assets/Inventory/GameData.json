@@ -1,0 +1,26 @@
+{
+    "1": {
+        "IconTexture": "res://Assets/Inventory/genericItem_color_001.png"
+    },
+    "2": {
+        "IconTexture": "res://Assets/Inventory/genericItem_color_016.png"
+    },
+    "3": {
+        "IconTexture": "res://Assets/Inventory/genericItem_color_021.png"
+    },
+    "4": {
+        "IconTexture": "res://Assets/Inventory/genericItem_color_022.png"
+    },
+    "5": {
+        "IconTexture": "res://Assets/Inventory/genericItem_color_023.png"
+    },
+    "6": {
+        "IconTexture": "res://Assets/Inventory/genericItem_color_080.png"
+    },
+    "7": {
+        "IconTexture": "res://Assets/Inventory/genericItem_color_082.png"
+    },
+    "8": {
+        "IconTexture": "res://Assets/Inventory/genericItem_color_129.png"
+    }
+}
