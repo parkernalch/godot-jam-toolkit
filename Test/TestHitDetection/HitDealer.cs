@@ -3,15 +3,15 @@ using System;
 
 public class HitDealer : Node2D
 {
-	private HitBox _hitBox;
+	private HurtBox _hurtBox;
 	private Sprite _sprite;
 	private Color _redColor;
 	private Color _greenColor;
 	
 	public override void _Ready()
 	{
-		_hitBox = GetNode<HitBox>("HitBox");
-		_hitBox.Deactivate();
+		_hurtBox = GetNode<HurtBox>("HurtBox");
+		_hurtBox.Deactivate();
 		_sprite = GetNode<Sprite>("Sprite");
 		_redColor = new Color("#FF0000");
 		_greenColor = new Color("#00FF00");
@@ -27,11 +27,11 @@ public class HitDealer : Node2D
 		if (buttonEvent != null)
 		{
 			if (buttonEvent.Pressed) {
-				_hitBox.Activate();
+				_hurtBox.Activate();
 				_sprite.SelfModulate = _greenColor;
 				
 			} else {
-				_hitBox.Deactivate();
+				_hurtBox.Deactivate();
 				_sprite.SelfModulate = _redColor;
 			}
 		}

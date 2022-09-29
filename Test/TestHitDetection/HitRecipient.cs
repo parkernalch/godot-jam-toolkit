@@ -4,7 +4,7 @@ using System;
 public class HitRecipient : Node2D
 {
 	private Tween _tween;
-	private HurtBox _hurtBox;
+	private HitBox _hitBox;
 	private Sprite _sprite;
 	private Color _redColor;
 	private Color _whiteColor;
@@ -14,8 +14,8 @@ public class HitRecipient : Node2D
 		_redColor = new Color("#FF0000");
 		_whiteColor = new Color("#FFFFFF");
 		_sprite = (Sprite)GetNode("Sprite");
-		_hurtBox = (HurtBox)GetNode("HurtBox");
-		_hurtBox.Connect("GotHit", this, "_OnGotHit");
+		_hitBox = (HitBox)GetNode("HitBox");
+		_hitBox.Connect("GotHit", this, "_OnGotHit");
 		_tween = new Tween();
 		AddChild(_tween);        
 	}
