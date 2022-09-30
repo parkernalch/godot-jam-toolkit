@@ -7,3 +7,6 @@ export_presets.cfg
 # mono ignores
 .mono/
 data_*/
+
+# vscode ignores
+.vscode/*
